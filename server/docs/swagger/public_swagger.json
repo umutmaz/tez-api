@@ -1,0 +1,261 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "description": "Tez API Public Documentation - ",
+    "version": "0.2.0",
+    "title": "Tez Public API",
+    "contact": {
+      "email": "kmmzurtkcn@gmail.com"
+    }
+  },
+  "tags": [
+    {
+      "name": "API",
+      "description": "API System"
+    },
+    {
+      "name": "Auth",
+      "description": "Authorization System"
+    }
+  ],
+  "paths": {
+    "/version": {
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Get current API version",
+        "description": "",
+        "operationId": "getAPIVersion",
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "env": {
+                              "type": "string"
+                            },
+                            "version": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "error": "object",
+            "message": "string"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Logs user into the system",
+        "description": "",
+        "operationId": "loginUser",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "description": "The user name for login",
+                    "example": "admin",
+                    "required": true,
+                    "type": "string"
+                  },
+                  "password": {
+                    "description": "The password for login in clear text",
+                    "example": "asdqwe1234",
+                    "required": true,
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "role": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request with error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "error": "object",
+                  "message": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Register user into the system and returns a token for authorization",
+        "description": "",
+        "operationId": "register",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "description": "User's name",
+                    "example": "admin",
+                    "required": true,
+                    "type": "string"
+                  },
+                  "surname": {
+                    "description": "User's surname",
+                    "example": "admin",
+                    "required": true,
+                    "type": "string"
+                  },
+                  "email": {
+                    "description": "User's email address",
+                    "example": "admin@admin.io",
+                    "required": true,
+                    "type": "string"
+                  },
+                  "username": {
+                    "description": "The user name for login",
+                    "example": "admin",
+                    "required": true,
+                    "type": "string"
+                  },
+                  "password": {
+                    "description": "The password for login in clear text",
+                    "example": "asdqwe1234",
+                    "required": true,
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string"
+                        },
+                        "username": {
+                          "type": "string"
+                        },
+                        "role": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request with error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "error": "object",
+                  "message": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "400Resp": {
+        "description": "Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 400
+                },
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

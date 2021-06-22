@@ -1,0 +1,795 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "description": "Tez API Documentation - ",
+    "version": "0.2.0",
+    "title": "Tez API",
+    "contact": {
+      "email": "kmmzurtkcn@gmail.com"
+    }
+  },
+  "tags": [
+    {
+      "name": "API",
+      "description": "API System"
+    },
+    {
+      "name": "Account",
+      "description": "Account Management System"
+    },
+    {
+      "name": "Character",
+      "description": "Character Management System"
+    },
+    {
+      "name": "User",
+      "description": "User Management System"
+    }
+  ],
+  "paths": {
+    "/version": {
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Get current API version",
+        "description": "",
+        "operationId": "getAPIVersion",
+        "responses": {
+          "200": {
+            "description": "Successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "env": {
+                              "type": "string"
+                            },
+                            "version": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "error": "object",
+            "message": "string"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
+    "/api/user": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "List users",
+        "description": "Listing active users",
+        "operationId": "getUsers",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/pageFilter"
+          },
+          {
+            "$ref": "#/components/parameters/pageSizeFilter"
+          },
+          {
+            "$ref": "#/components/parameters/lastLimitFilter"
+          },
+          {
+            "$ref": "#/components/parameters/orderByFilter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BasicUser"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request with error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "error": "object",
+                  "message": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "UserToken": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Create user",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "createUser",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/User"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success Creation"
+          },
+          "400": {
+            "description": "Bad Request with error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "error": "object",
+                  "message": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "UserToken": []
+          }
+        ]
+      }
+    },
+    "/api/user/{username}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get user by user name",
+        "description": "",
+        "operationId": "getUserByName",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "description": "The name that needs to be fetched. Use user1 for testing. ",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request with error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "error": "object",
+                  "message": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          }
+        },
+        "security": [
+          {
+            "UserToken": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Updated user",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "updateUser",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "description": "name that need to be updated",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/User"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request with error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "error": "object",
+                  "message": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          }
+        },
+        "security": [
+          {
+            "UserToken": []
+          }
+        ]
+      }
+    },
+    "/api/user/me": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get current user data",
+        "description": "",
+        "operationId": "getCurrentUser",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BasicUser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request with error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "error": "object",
+                  "message": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          }
+        },
+        "security": [
+          {
+            "UserToken": []
+          }
+        ]
+      }
+    },
+    "/api/account": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "List User's Accounts",
+        "description": "Listing user's accounts",
+        "operationId": "getAccounts",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BasicAccount"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request with error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "error": "object",
+                  "message": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "UserToken": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Add account to user",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "addUserAccount",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "address": {
+                    "description": "Address of the account to add",
+                    "required": true,
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success Creation"
+          },
+          "400": {
+            "description": "Bad Request with error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "error": "object",
+                  "message": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "UserToken": []
+          }
+        ]
+      }
+    },
+    "/api/account/{id}": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Get one Account",
+        "description": "Listing user's account with ID",
+        "operationId": "getAccountWithID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of the account to add ",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BasicAccount"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request with error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "error": "object",
+                  "message": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "UserToken": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Delete an Account",
+        "description": "Delete user's account with ID",
+        "operationId": "deleteAccountWithID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of the account to add ",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request with error message",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "error": "object",
+                  "message": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "UserToken": []
+          }
+        ]
+      }
+    }
+  },
+  "security": [
+    {
+      "UserToken": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "UserToken": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization"
+      }
+    },
+    "schemas": {
+      "Pagination": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer"
+          },
+          "pageCount": {
+            "type": "integer"
+          },
+          "pageSize": {
+            "type": "integer"
+          },
+          "rowCount": {
+            "type": "integer"
+          }
+        },
+        "xml": {
+          "name": "MetaData"
+        }
+      },
+      "MetaData": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "totalCount": {
+                "type": "integer",
+                "description": "Total item count with current filters"
+              },
+              "totalPage": {
+                "type": "integer"
+              },
+              "page": {
+                "type": "integer",
+                "description": "active page"
+              }
+            }
+          }
+        },
+        "xml": {
+          "name": "MetaData"
+        }
+      },
+      "BasicAccount": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "address": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "integer"
+          }
+        },
+        "xml": {
+          "name": "Account"
+        }
+      },
+      "BasicUser": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          }
+        },
+        "xml": {
+          "name": "User"
+        }
+      },
+      "User": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BasicUser"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "password": {
+                "type": "string"
+              },
+              "userStatus": {
+                "type": "integer",
+                "format": "int32",
+                "description": "User Status"
+              },
+              "email": {
+                "type": "string"
+              },
+              "phone": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "xml": {
+          "name": "User"
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "type": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "responses": {
+      "400Resp": {
+        "description": "Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 400
+                },
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              }
+            }
+          }
+        }
+      },
+      "201Resp": {
+        "description": "Success",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "200TokenResp": {
+        "description": "Success Login",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "description": "Username of user"
+                },
+                "role": {
+                  "type": "string",
+                  "description": "User Role"
+                },
+                "token": {
+                  "type": "string",
+                  "description": "Authorization Token"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "networkID": {
+        "in": "path",
+        "name": "networkID",
+        "description": "Network ID",
+        "schema": {
+          "minimum": 1,
+          "default": 1,
+          "type": "integer"
+        }
+      },
+      "tag": {
+        "in": "path",
+        "name": "tag",
+        "description": "Contract version tag",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "applicationID": {
+        "in": "path",
+        "name": "applicationID",
+        "description": "application ID",
+        "schema": {
+          "minimum": 1,
+          "default": 1,
+          "type": "integer"
+        }
+      },
+      "shortID": {
+        "in": "path",
+        "name": "shortID",
+        "description": "Short ID for contract",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "id": {
+        "in": "path",
+        "name": "id",
+        "description": "ID for contract",
+        "schema": {
+          "minimum": 1,
+          "default": 1,
+          "type": "integer"
+        }
+      },
+      "method": {
+        "in": "path",
+        "name": "method",
+        "description": "Deployed Contract Method",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "pageFilter": {
+        "in": "query",
+        "name": "page",
+        "description": "Active Page Number",
+        "schema": {
+          "minimum": 1,
+          "default": 1,
+          "type": "integer"
+        }
+      },
+      "pageSizeFilter": {
+        "in": "query",
+        "name": "pageSize",
+        "description": "Item count on a page",
+        "schema": {
+          "minimum": 1,
+          "default": 20,
+          "type": "integer"
+        }
+      },
+      "lastLimitFilter": {
+        "in": "query",
+        "name": "lastLimit",
+        "description": "Last item count",
+        "schema": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "orderByFilter": {
+        "in": "query",
+        "name": "orderBy",
+        "description": "A field name to order",
+        "schema": {
+          "type": "string",
+          "description": "Field name, default : id or timestamp"
+        }
+      }
+    }
+  }
+}
